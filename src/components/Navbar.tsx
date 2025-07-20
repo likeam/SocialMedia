@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { LuMenu, LuX } from "react-icons/lu";
+import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const { signInWithGoogle, signOut, user } = useAuth();
+  const displayName = user?.user_metadata.user_name || user?.email;
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
@@ -39,6 +43,35 @@ const Navbar = () => {
             >
               Create Community
             </Link>
+          </div>
+
+          <div className=" hidden md:flex items-center">
+            {user ? (
+              <div className=" flex items-center space-x-4">
+                {user.user_metadata.avatar_url && (
+                  <img
+                    src={user.user_metadata.avatar_url}
+                    alt=" user pic"
+                    className=" w-8 h-8 rounded-full object-cover "
+                  />
+                )}
+
+                <span className=" text-gray-300">{displayName}</span>
+                <button
+                  onClick={signOut}
+                  className="bg-red-500 px-3 py-1 rounded"
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={signInWithGoogle}
+                className="bg-blue-500 px-3 py-1 rounded"
+              >
+                Sign In With Google
+              </button>
+            )}
           </div>
 
           {/* Mobile  */}
